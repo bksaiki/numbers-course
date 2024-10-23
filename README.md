@@ -9,3 +9,4 @@ In particular,
 ## Table of Contents
 
 1. [Fixed-Point Numbers](./docs/01-fixed.md)  
+2. [Fixed-Point Rounding](./docs/02-fixed-round.md)

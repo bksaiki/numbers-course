@@ -1,6 +1,6 @@
-Quick Links: [Top](../README.md)
-
 ## Chapter 1: Fixed-Point Numbers
+
+Quick Links: [Top](../README.md) | [Next](02-fixed-round.md)
 
 Fixed-point numbers are ubiquitous
   in digital signal processing (DSP), microcontrollers,
@@ -54,7 +54,7 @@ We usually refer to its value as
   the _unnormalized_ exponent since we can view
   values in this representation as numbers
   in unnormalized scientific notation
-  $(-1)^s * c * 2^{\text{exp}}$.
+  $(-1)^s \times c \times 2^{\text{exp}}$.
 ```python
 class Num():
     s: bool
@@ -123,10 +123,9 @@ class Num():
 ```
 With these properties defined,
   we can now turn to fixed-point rounding
-  in the next section.
+  in the [next](02-fixed-round.md) section.
 
-
-### Exercise
+### Exercises
 
 1. Implement `is_integer()` which returns whether
   or not a `Num` value is integer value.
@@ -137,7 +136,7 @@ class Num():
         ...
 ```
 
-2. Implement `split()` which takes a position `n`
+2. Implement `split(n)` which takes a position `n`
   and returns a pair of `Num` values which
   represent the digits above `n` and the digits
   at or below `n`.
@@ -145,5 +144,15 @@ class Num():
 class Num():
     ...
     def split(self, n: int) -> tuple[Num, Num]
+        ...
+```
+
+3. Implement `bit(n)` which takes a position `n`
+  and returns whether the binary digit at
+  that position is `1`.
+```python
+class Num():
+    ...
+    def bit(self, n: int) -> bool
         ...
 ```
