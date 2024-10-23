@@ -10,3 +10,6 @@ In particular,
 
 1. [Fixed-Point Numbers](./docs/01-fixed.md)  
 2. [Fixed-Point Rounding](./docs/02-fixed-round.md)
+3. [Fixed-Point Overflow](./docs/03-fixed-overflow.md)
+4. [Fixed-Point Operations](./docs/04-fixed-operations.md)
+5. [Fixed-Point Encoding](./docs/05-fixed-encoding.md)
