@@ -5,3 +5,7 @@ This is a tutorial as part of a possible course
 In particular,
   it is geared towards the specification and implementation
   of number types like fixed-point, floating-point, and more.
+
+## Table of Contents
+
+1. [Fixed-Point Numbers](./docs/01-fixed.md)  
