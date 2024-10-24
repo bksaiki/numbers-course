@@ -1,4 +1,4 @@
-## Chapter 1: Fixed-Point Numbers
+# Chapter 1: Fixed-Point Numbers
 
 Quick Links: [Top](../README.md) | [Next](02-fixed-round.md)
 
@@ -10,63 +10,125 @@ These numbers are called ``fixed''-point
   since the position of the binary point
   is _fixed_ and will not change.
 
-Start with an integer representation in
-  sign-magnitude form, that is,
-  we separately store the sign, represented by a boolean,
-  and the magnitude, represented by a non-negative integer.
-Our convention is to
-  name the sign attribute `s` and
-  the unsigned magnitude attribute `c`.
+## Interface
+
+To better under fixed-point numbers,
+  we will build a software implementation
+  of theme.
+In particular,
+  we will focus on parts of the implementation
+  in line with the theme of this tutorial:
+  computer numbers are just interfaces to
+  their mathematical counterparts.
+
+To begin,
+  we start with the integers.
+Specifically,
+  we will use the sign-magnitude representation
+  of integers: integers are described by a (boolean) sign
+  and a (non-negative) magnitude.
+Our convention is to refer
+  to the sign attribute as `s` and
+  the unsigned magnitude attribute as `c`.
 ```python
 class Num():
     s: bool
-    """sign of this number"""
+    """sign"""
     c: int
-    """magnitude of this number"""
+    """magnitude"""
 ```
-We can visualize the magnitude of an `Num` value
-  by placing its significant digits, say $p$ of them,
-  within an infinite sequence of binary digits,
-  of which only the significant digits may be `1`.
-The sequence also contains
-  a binary point to indicate the position
-  of the ones place.
+As a side note,
+  recall that the sign-magnitude representation
+  has a single redundancy: we can represent
+  zero by `-0` or `+0`.
+
+To construct a `Num` instance from a native Python integer, say `i`,
+  we use a straightforward translation:
+```python
+x = Num(i < 0, abs(i))
+```
+Suppose `x` has only `p` significant digits,
+  that is, its magnitude can be encoded in
+  at most `p` binary digits.
+We can visualize these significant digits
+  by considering their infinite digit expansion&mdash;an
+  infinite sequence of digits separated by
+  a binary point that indicates the position
+  of the digit in the ones place.
+  of digits (all other digits are 0)
 ```
 ... | 0 | 0 | b_{p-1} | b_{p-2} | ... | b_2 | b_1 | b_0 . 0 | 0 | ... 
 ```
-Notice that the binary point is just
-  below the the least significant digit
-  $b_0$ of the value.
-For fixed-point values in general,
-  we shift where the $p$ significant values are.
+By definition,
+  the least significant digit of `x`,
+  $b_0$ is immediately to the left of the binary point.
+
+General fixed-point numbers,
+  on the other hand, do not have this positional
+  restriction that integers have.
+Rather,
+  the least significant digit is at a fixed
+  distance from the binary point,
+  either to the left or to the right.
 For example,
   we can shift the digits right by 2 places.
 ```
 ... | 0 | 0 | b_{p-3} | b_{p-4} | ... | b_{0} . b_{-1} | b_{-2} | 0 | 0 | ... 
 ```
-In our implementation,
-  we track the position of our significant digits
-  by storing the absolute position of
-  the least significant digit.
-Our convention is to name the
-  this absolute position attribute `exp`.
-We usually refer to its value as
-  the _unnormalized_ exponent since we can view
-  values in this representation as numbers
-  in unnormalized scientific notation
-  $(-1)^s \times c \times 2^{\text{exp}}$.
+
+To support this, of course,
+  our numbers interface needs extending.
+We must keep track this least significant digit
+  offset for each fixed-point number.
+For inspiration,
+  we turn to a familiar representation of numbers:
+  scientific notation.
+Since we are handling binary numbers,
+  we use scientific notation using powers of two:
+$$
+x = (-1)^s \times c \times 2^{exp}
+$$
+where `exp` is an integer value called the "exponent" of `x`.
+Notice that we are using
+  "unnormalized" scientific notation
+  since `c` is a non-negative integer
+  (rather than a value on $[1, 2)$
+  as with normalized scientific notation).
+As such,
+  we will refer to the value `exp`
+  as the _unnormalized exponent_ or `x`.
+
+We see that the unnormalized exponent
+  is _exactly_ the signed difference of the
+  position of the least significant digit to the binary point
+  (or more accurately, the digit in the ones place).
+Thus,
+  the digit offset of `x` is negative
+  when `x` contains significant digits
+  that are "fractional".
+Otherwise,
+  `x` is certainly an integer.
+(The reverse is not true!)
+
+Returning to our implementation,
+  we update the `Num` class with the unnormalized exponent
+  attribute `exp`.
 ```python
 class Num():
     s: bool
-    """sign of this number"""
+    """sign"""
     c: int
-    """magnitude of this number"""
+    """magnitude"""
     exp: int
     """absolute position of the LSB"""
 ```
-In the example above,
-  we would set `exp` to `-2` when
-  initializing a value in that representation.
+Given a number in scientific notation,
+  we would initialize as a `Num` instance by writing
+```python
+x = Num(s, c, exp)
+```
+
+## Properties
 
 There are four derived properties
   that are often useful.
@@ -127,7 +189,7 @@ With these properties defined,
 
 ### Exercises
 
-1. Implement `is_integer()` which returns whether
+1. Implement `is_integer(self)` which returns whether
   or not a `Num` value is integer value.
 ```python
 class Num():
@@ -136,7 +198,7 @@ class Num():
         ...
 ```
 
-2. Implement `split(n)` which takes a position `n`
+2. Implement `split(self, n)` which takes a position `n`
   and returns a pair of `Num` values which
   represent the digits above `n` and the digits
   at or below `n`.
@@ -147,7 +209,7 @@ class Num():
         ...
 ```
 
-3. Implement `bit(n)` which takes a position `n`
+3. Implement `bit(self, n)` which takes a position `n`
   and returns whether the binary digit at
   that position is `1`.
 ```python
@@ -156,3 +218,9 @@ class Num():
     def bit(self, n: int) -> bool
         ...
 ```
+
+4. Implement `normalize(self, p)` which takes a non-negative precision `p`
+  and returns a copy of `self` that satisfies the following properties:
+  (i) `self` is numerically equivalent to `normalize(self, p)`;
+  (ii) if `self` is non-zero and `self.p <= p`,
+  `normalize(self, p)` has exactly `p` bits of precision.
