@@ -107,6 +107,9 @@ class Num(object):
         Exercise 1.2:
         Returns the value of the digit at the `n`th position as a boolean.
         """
+        if not isinstance(n, int):
+            raise ValueError('expected an integer', n)
+
         # special case: 0 has no digits set
         if self.is_zero():
             return False
@@ -117,7 +120,7 @@ class Num(object):
         if n < self.exp:
             return False
         
-        # above the region of significant
+        # above the region of significane
         if n > self.e:
             return False
         
@@ -132,6 +135,9 @@ class Num(object):
         Returns a copy of `self` that has exactly `p` bits of precision.
         If `p < self.p`, a `ValueError` is thrown.
         """
+        if not isinstance(p, int) or p < 0:
+            raise ValueError('expected a non-negative integer', p)
+        
         # special case: 0 has no precision ever
         if self.is_zero():
             return self
@@ -145,4 +151,46 @@ class Num(object):
         c = self.c << shift
         return Num(self.s, exp, c)
         
+    def split(self, n: int):
+        """
+        Exercise 1.4:
+        Splits `self` into two `Num` values where the first value represents
+        the digits above `n` and the second value represents the digits below `n`.
+        """
+        if not isinstance(n, int):
+            raise ValueError('expected an integer', n)
+        
+        # special case: 0 has no precision
+        if self.is_zero():
+            hi = Num(self.s, n + 1, 0)
+            lo = Num(self.s, n, 0)
+            return (hi, lo)
+        
+        assert self.e is not None
+
+        # check if all digits are in the lower part
+        if n > self.e:
+            hi = Num(self.s, n + 1, 0)
+            lo = Num(self.s, self.exp, self.c)
+            return (hi, lo)
+        
+        # check if all digits are in the upper part
+        if n < self.exp:
+            hi = Num(self.s, self.exp, self.c)
+            lo = Num(self.s, n, 0)
+            return (hi, lo)
+        
+        # splitting the digits
+        p_lo = (n + 1) - self.exp
+        mask_lo = bitmask(p_lo)
+        
+        exp_hi = self.exp + p_lo
+        c_hi = self.c >> p_lo
+
+        exp_lo = self.exp
+        c_lo = self.c & mask_lo
+
+        hi = Num(self.s, exp_hi, c_hi)
+        lo = Num(self.s, exp_lo, c_lo)
+        return (hi, lo)
 

@@ -229,7 +229,7 @@ class Num():
     2. if `self` is non-zero and `self.p <= p`,
       `normalize(self, p)` has exactly `p` bits of precision;
     3. if `self` is non-zero and `self.p > p`,
-      `normalize(self, p)` should through an exception.
+      `normalize(self, p)` should throw an exception.
 ```python
 class Num():
     ...
@@ -240,8 +240,13 @@ class Num():
 4. Implement `split(self, n)` which takes a position `n`
   and returns a pair of `Num` values which represent the digits
   above `n` and the digits at or below `n`.
-  In particular, if `y0, y1 = x.split(n)`
-    then `y0.p <= x.p` and `y1.p <= x.p`.
+  If `yh, yl = x.split(n)`,
+    then the following properties must be satisfied:
+    1. the sum of `yh` and `yl` is numerically equivalent to `x`;
+    2. `yh.p <= x.p` and `yh.p <= x.p`;
+    3. if `x` is non-zero, then `yh.exp > n` and `yl.exp <= n`;
+      regardless of the value of `yh` or `yl`;
+    4. `x.s == yh.s` and `x.s == yl.s`
 ```python
 class Num():
     ...
