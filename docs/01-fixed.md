@@ -160,10 +160,10 @@ By convention,
 class Num():
     ...
     @property
-    def e(self) -> int:
-        if self.c == 0
+    def e(self) -> Optional[int]:
+        if self.c == 0:
             return None
-        else
+        else:
             return self.exp + self.p - 1
 ```
 The third property is `n`,
@@ -188,9 +188,9 @@ class Num():
     ...
     @property
     def m(self) -> int:
-        if self.s
+        if self.s:
             return -self.m
-        else
+        else:
             return self.m
 ```
 With these properties defined,
@@ -204,7 +204,7 @@ With these properties defined,
 ```python
 class Num():
     ...
-    def is_integer(self) -> bool
+    def is_integer(self) -> bool:
         ...
 ```
 
@@ -215,7 +215,7 @@ class Num():
 ```python
 class Num():
     ...
-    def split(self, n: int) -> tuple[Num, Num]
+    def split(self, n: int) -> tuple[Num, Num]:
         ...
 ```
 
@@ -225,7 +225,7 @@ class Num():
 ```python
 class Num():
     ...
-    def bit(self, n: int) -> bool
+    def bit(self, n: int) -> bool:
         ...
 ```
 
@@ -239,6 +239,6 @@ class Num():
 ```python
 class Num():
     ...
-    def normalize(self, p: int) -> Num
+    def normalize(self, p: int) -> Num:
         ...
 ```
