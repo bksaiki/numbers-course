@@ -135,7 +135,7 @@ There are four derived properties
 The first property is `p`,
   the _precision_ of the value
   which is the minimum number of bits
-  required to encode `c` in binary.
+  required to encode `x.c` in binary.
 ```python
 class Num():
     ...
@@ -147,23 +147,33 @@ The second property is `e`,
   the _normalized_ exponent,
   which represents the exponent of the value
   if we put it in normalized scientific notation
-  $(-1)^s \times f \times 2^{\text{e}}$ where $f$ is on $[0, 1]$.
-We should be careful about values that are zero
-  since this operation is not well-defined.
+  $(-1)^s \times f \times 2^{\text{e}}$ where $f$ is on $[1, 2)$.
+Alternatively,
+  this represents the position
+  of the most significant digit of `x`.
+This operation is not well-defined
+  for values that are zero.
 By convention,
-  we just extend its definition for non-zero values;
-  peculiarly, `x = 0` iff `e() < exp()`.
+  we will return `None` making `e`
+  an partial function.
 ```python
 class Num():
     ...
     @property
     def e(self) -> int:
-        return self.exp + self.p - 1
+        if self.c == 0
+            return None
+        else
+            return self.exp + self.p - 1
 ```
 The third property is `n`,
   the _absolute digit_ of the value,
-  which is the first digit that is not significant.
-Its definition is simple.
+  which is the position of the digit
+  directly below the least significant digit of `x`.
+While this property seems highly redundant,
+  it is useful to differentiate `exp` and `n`
+  later on.
+Its definition is straightforward.
 ```python
 class Num():
     ...
@@ -190,7 +200,7 @@ With these properties defined,
 ### Exercises
 
 1. Implement `is_integer(self)` which returns whether
-  or not a `Num` value is integer value.
+  or not a `Num` value is an integer value.
 ```python
 class Num():
     ...
@@ -221,6 +231,14 @@ class Num():
 
 4. Implement `normalize(self, p)` which takes a non-negative precision `p`
   and returns a copy of `self` that satisfies the following properties:
-  (i) `self` is numerically equivalent to `normalize(self, p)`;
-  (ii) if `self` is non-zero and `self.p <= p`,
-  `normalize(self, p)` has exactly `p` bits of precision.
+    1. `self` is numerically equivalent to `normalize(self, p)`;
+    2. if `self` is non-zero and `self.p <= p`,
+      `normalize(self, p)` has exactly `p` bits of precision;
+    3. if `self` is non-zero and `self.p > p`,
+      `normalize(self, p)` should through an exception.
+```python
+class Num():
+    ...
+    def normalize(self, p: int) -> Num
+        ...
+```
