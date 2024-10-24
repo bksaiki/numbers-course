@@ -199,6 +199,11 @@ With these properties defined,
 
 ### Exercises
 
+Each of the following exercises
+  have solutions that can be computed in `O(1)`
+  integer operations with respect to `self.p`
+  and any other argument.
+
 1. Implement `is_integer(self)` which returns whether
   or not a `Num` value is an integer value.
 ```python
@@ -208,18 +213,7 @@ class Num():
         ...
 ```
 
-2. Implement `split(self, n)` which takes a position `n`
-  and returns a pair of `Num` values which
-  represent the digits above `n` and the digits
-  at or below `n`.
-```python
-class Num():
-    ...
-    def split(self, n: int) -> tuple[Num, Num]:
-        ...
-```
-
-3. Implement `bit(self, n)` which takes a position `n`
+2. Implement `bit(self, n)` which takes a position `n`
   and returns whether the binary digit at
   that position is `1`.
 ```python
@@ -229,7 +223,7 @@ class Num():
         ...
 ```
 
-4. Implement `normalize(self, p)` which takes a non-negative precision `p`
+3. Implement `normalize(self, p)` which takes a non-negative precision `p`
   and returns a copy of `self` that satisfies the following properties:
     1. `self` is numerically equivalent to `normalize(self, p)`;
     2. if `self` is non-zero and `self.p <= p`,
@@ -240,5 +234,17 @@ class Num():
 class Num():
     ...
     def normalize(self, p: int) -> Num:
+        ...
+```
+
+4. Implement `split(self, n)` which takes a position `n`
+  and returns a pair of `Num` values which represent the digits
+  above `n` and the digits at or below `n`.
+  In particular, if `y0, y1 = x.split(n)`
+    then `y0.p <= x.p` and `y1.p <= x.p`.
+```python
+class Num():
+    ...
+    def split(self, n: int) -> tuple[Num, Num]:
         ...
 ```
