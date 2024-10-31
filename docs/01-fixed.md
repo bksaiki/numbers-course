@@ -85,10 +85,9 @@ For inspiration,
   scientific notation.
 Since we are handling binary numbers,
   we use scientific notation using powers of two:
-$$
-x = (-1)^s \times c \times 2^{exp}
-$$
-where `exp` is an integer value called the "exponent" of `x`.
+  $$ x = (-1)^s \times c \times 2^{exp} $$
+  where `exp` is an integer value called
+  the "exponent" of `x`.
 Notice that we are using
   "unnormalized" scientific notation
   since `c` is a non-negative integer
@@ -189,9 +188,9 @@ class Num():
     @property
     def m(self) -> int:
         if self.s:
-            return -self.m
+            return -self.c
         else:
-            return self.m
+            return self.c
 ```
 With these properties defined,
   we can now turn to fixed-point rounding
@@ -243,7 +242,7 @@ class Num():
   If `yh, yl = x.split(n)`,
     then the following properties must be satisfied:
     1. the sum of `yh` and `yl` is numerically equivalent to `x`;
-    2. `yh.p <= x.p` and `yh.p <= x.p`;
+    2. `yh.p <= x.p` and `yl.p <= x.p`;
     3. if `x` is non-zero, then `yh.exp > n` and `yl.exp <= n`;
       regardless of the value of `yh` or `yl`;
     4. `x.s == yh.s` and `x.s == yl.s`

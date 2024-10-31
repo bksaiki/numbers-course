@@ -169,7 +169,7 @@ class Num(object):
         assert self.e is not None
 
         # check if all digits are in the lower part
-        if n > self.e:
+        if n >= self.e:
             hi = Num(self.s, n + 1, 0)
             lo = Num(self.s, self.exp, self.c)
             return (hi, lo)
