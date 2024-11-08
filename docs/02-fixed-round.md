@@ -72,13 +72,52 @@ If we choose to
 Mathematically,
   this operation would correspond
   to introducing a perturbation, $\varepsilon$
-  to the original value, that is, $x' = x + \varepsilon$.
+  to the original value, that is,
+  the new value is some $x + \varepsilon$.
 
 ## Rounding
 
 This "loss" of digits is the fundamental issue
-  that a _rounding_ operation addresses,
-  that is, 
+  that a _rounding_ operation intends to address.
+In this case,
+  a rounding operation must decide a _representable_ value `x'`
+  for a given fixed-point value `x` when digits are lost.
+Ideally,
+  `x'` is "close" to `x` for some metric
+  that is important to users of this number representation,
+  and the operation is computable in a reasonable
+  amount of time.
+
+## Rounding Contexts
+
+To describe the parameters required to
+  carry out a rounding operation,
+  we encapsulate this information in
+  an object called a _rounding context_.
+A rounding operation takes both a value `x`
+  and a rounding context `ctx` to decided
+  a "best" value `x'`.
+Any value that is representable
+  according the rounding context is
+  said to be representable _under_
+  the rounding context.
+Clearly,
+  rounding fixed-point values to other fixed-point
+  values requires a new least significant digit.
+```python
+class RoundingContext():
+    exp: int
+    """position of the least significant digit"""
+```
+Assuming that `x` is not representable
+  under the rounding context,
+  it is between two representable values,
+  say `y1` and `y2`.
+We need a way to decide which of these values
+  to decide deterministically.
+We call this deciding information,
+  the _rounding mode_ of the rounding context.
+
 
 ### Exercises
 
