@@ -55,7 +55,19 @@ We can visualize these significant digits
   infinite sequence of digits separated by
   a binary point that indicates the position
   of the digit in the ones place.
-  of digits (all other digits are 0)
+  of digits (all other digits are 0)l
+
+Thus the non-zero digits of `x`
+  are contained within a _region of significance_,
+  a sequential group of binary digits that contain
+  all the non-zero digits in the infinite binary expansion.
+Note that we can choose this region of significance
+  to be as large as we want, as long as,
+  it contains all of the non-zero digits
+  and no digit at a position smaller than `exp`.
+Therefore,
+  we could include zero digits like $b_p$ and $b_{p+1}$
+  but not digits such as $b_{-1}$ and $b_{-2}$.
 ```
 ... | 0 | 0 | b_{p-1} | b_{p-2} | ... | b_2 | b_1 | b_0 . 0 | 0 | ... 
 ```
@@ -75,6 +87,10 @@ For example,
 ```
 ... | 0 | 0 | b_{p-3} | b_{p-4} | ... | b_{0} . b_{-1} | b_{-2} | 0 | 0 | ... 
 ```
+Our discussion of the region of significance is similar here;
+  the region of significance must include
+  digits between $-2$ and $p-3$ but can include
+  zero digits at positions at or above $p-2$.
 
 To support this, of course,
   our numbers interface needs extending.
@@ -135,6 +151,9 @@ The first property is `p`,
   the _precision_ of the value
   which is the minimum number of bits
   required to encode `x.c` in binary.
+Notice how this relates to the region of significance:
+  the precision `p` is the minimum allowable size
+  of the region of significance.
 ```python
 class Num():
     ...
@@ -169,9 +188,8 @@ The third property is `n`,
   the _absolute digit_ of the value,
   which is the position of the digit
   directly below the least significant digit of `x`.
-While this property seems highly redundant,
-  it is useful to differentiate `exp` and `n`
-  later on.
+While this property seems redundant,
+  it is useful to differentiate `exp` and `n` later on.
 Its definition is straightforward.
 ```python
 class Num():
@@ -181,7 +199,7 @@ class Num():
         return self.exp - 1
 ```
 The last property is `m`, the _signed_ mantissa.
-It is just $(-1)^s \times m$.
+It is just $(-1)^s \times c$.
 ```python
 class Num():
     ...
